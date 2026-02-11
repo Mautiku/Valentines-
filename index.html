@@ -3,22 +3,23 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Valentine & Anniversary Surprise</title>
+    <title>Our Special Journey ❤️</title>
     <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;500&family=Caveat:wght@700&display=swap" rel="stylesheet">
     <script src="https://cdn.tailwindcss.com"></script>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/animate.css/4.1.1/animate.min.css"/>
     <style>
         body {
             font-family: 'Mitr', sans-serif;
-            background-color: #fff5f5;
+            background-color: #fff0f3;
             overflow-x: hidden;
             touch-action: manipulation;
         }
         .handwriting { font-family: 'Caveat', cursive; }
         .glass-card {
-            background: rgba(255, 255, 255, 0.9);
+            background: rgba(255, 255, 255, 0.95);
             backdrop-filter: blur(10px);
-            border: 1px solid rgba(255, 182, 193, 0.5);
-            box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.2);
+            border: 2px solid #ffb6c1;
+            box-shadow: 0 10px 40px rgba(255, 182, 193, 0.4);
         }
         .heart-particle {
             position: fixed;
@@ -29,65 +30,79 @@
             animation: fall linear forwards;
         }
         @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
-        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
-        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
         
-        /* ซ่อนหน้าเซอร์ไพรส์เป็นค่าเริ่มต้น */
+        .slide-enter {
+            animation: slideInRight 0.5s ease-out forwards;
+        }
+        @keyframes slideInRight {
+            from { transform: translateX(50px); opacity: 0; }
+            to { transform: translateX(0); opacity: 1; }
+        }
+
         #surprise-section { display: none; }
         .hidden-trigger {
             position: fixed;
             top: 0;
             right: 0;
-            width: 50px;
-            height: 50px;
+            width: 60px;
+            height: 60px;
             z-index: 100;
             cursor: pointer;
         }
+        
+        .btn-pop {
+            transition: transform 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+        }
+        .btn-pop:active { transform: scale(0.9); }
     </style>
 </head>
 <body class="flex items-center justify-center min-h-screen p-4">
 
-    <!-- จุดคลิกลับสำหรับทดสอบ (คลิก 3 ครั้งที่มุมขวาบน) -->
+    <!-- จุดคลิกลับสำหรับทดสอบ (คลิกมุมขวาบน 3 ครั้ง) -->
     <div class="hidden-trigger" onclick="handleSecretClick()"></div>
 
     <!-- ส่วนที่ 1: นับถอยหลัง (Countdown) -->
-    <div id="countdown-section" class="w-full max-w-md text-center">
-        <div class="glass-card p-8 rounded-3xl">
-            <h1 class="text-2xl mb-6 text-pink-600 font-medium">รอนับถอยหลังสู่วันพิเศษ</h1>
-            <div class="grid grid-cols-4 gap-2 mb-8 text-pink-700 font-bold">
-                <div class="bg-white p-3 rounded-xl shadow-sm">
-                    <span id="days">00</span><div class="text-[10px] font-light">วัน</div>
+    <div id="countdown-section" class="w-full max-w-md text-center animate__animated animate__fadeIn">
+        <div class="glass-card p-10 rounded-[2.5rem]">
+            <h1 class="text-2xl mb-8 text-pink-600 font-medium">รอนับถอยหลังสู่วันพิเศษของเรา</h1>
+            <div class="grid grid-cols-4 gap-3 mb-10">
+                <div class="bg-pink-50 p-4 rounded-2xl border border-pink-100 shadow-inner">
+                    <span id="days" class="text-3xl font-bold text-pink-600">00</span>
+                    <div class="text-[10px] uppercase tracking-wider text-pink-400">วัน</div>
                 </div>
-                <div class="bg-white p-3 rounded-xl shadow-sm">
-                    <span id="hours">00</span><div class="text-[10px] font-light">ชม.</div>
+                <div class="bg-pink-50 p-4 rounded-2xl border border-pink-100 shadow-inner">
+                    <span id="hours" class="text-3xl font-bold text-pink-600">00</span>
+                    <div class="text-[10px] uppercase tracking-wider text-pink-400">ชม.</div>
                 </div>
-                <div class="bg-white p-3 rounded-xl shadow-sm">
-                    <span id="minutes">00</span><div class="text-[10px] font-light">นาที</div>
+                <div class="bg-pink-50 p-4 rounded-2xl border border-pink-100 shadow-inner">
+                    <span id="minutes" class="text-3xl font-bold text-pink-600">00</span>
+                    <div class="text-[10px] uppercase tracking-wider text-pink-400">นาที</div>
                 </div>
-                <div class="bg-white p-3 rounded-xl shadow-sm">
-                    <span id="seconds">00</span><div class="text-[10px] font-light">วินาที</div>
+                <div class="bg-pink-50 p-4 rounded-2xl border border-pink-100 shadow-inner">
+                    <span id="seconds" class="text-3xl font-bold text-pink-600">00</span>
+                    <div class="text-[10px] uppercase tracking-wider text-pink-400">วินาที</div>
                 </div>
             </div>
-            <p class="text-gray-400 italic text-sm">14 Feb, 05:50 AM</p>
+            <p class="text-pink-300 italic text-sm font-light">See you on 14 Feb, 05:50 AM ❤️</p>
         </div>
     </div>
 
-    <!-- ส่วนที่ 2: เนื้อหาเซอร์ไพรส์ (Story Slides) -->
-    <div id="surprise-section" class="w-full max-w-lg text-center relative z-10 fade-in">
-        <div class="glass-card p-6 md:p-10 rounded-3xl min-h-[500px] flex flex-col justify-between items-center">
+    <!-- ส่วนที่ 2: เนื้อหาเซอร์ไพรส์ (Animated Story) -->
+    <div id="surprise-section" class="w-full max-w-lg text-center relative z-10">
+        <div class="glass-card p-8 md:p-12 rounded-[3rem] min-h-[550px] flex flex-col justify-between items-center relative overflow-hidden">
             
             <div id="slide-content" class="w-full">
-                <!-- Content will be injected here -->
+                <!-- Content injected here -->
             </div>
 
-            <div class="w-full mt-6">
+            <div class="w-full mt-8">
                 <div class="flex justify-between items-center w-full">
-                    <button id="prevBtn" onclick="prevSlide()" class="text-pink-400 font-medium disabled:opacity-0">
-                        ← ย้อนกลับ
+                    <button id="prevBtn" onclick="prevSlide()" class="btn-pop text-pink-400 font-medium disabled:opacity-0 flex items-center gap-1">
+                        <span>←</span> ย้อนกลับ
                     </button>
-                    <div id="page-indicator" class="text-xs text-gray-400"></div>
-                    <button id="nextBtn" onclick="nextSlide()" class="bg-pink-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-pink-600 transition-all">
-                        ถัดไป →
+                    <div id="page-indicator" class="px-3 py-1 bg-pink-100 text-pink-500 rounded-full text-xs font-bold"></div>
+                    <button id="nextBtn" onclick="nextSlide()" class="btn-pop bg-pink-500 text-white px-8 py-3 rounded-full shadow-lg hover:bg-pink-600 transition-all font-medium flex items-center gap-2">
+                        <span>ถัดไป</span> <span id="next-icon">→</span>
                     </button>
                 </div>
             </div>
@@ -95,28 +110,34 @@
     </div>
 
     <script>
-        // --- 1. ตั้งค่าเวลาและข้อมูล ---
-        // ตั้งเวลาเป้าหมาย: 14 ก.พ. 2026 เวลา 05:50:00
+        // --- 1. ตั้งค่าเวลาเป้าหมาย (14 ก.พ. 05:50) ---
         const targetDate = new Date("Feb 14, 2026 05:50:00").getTime();
         
+        // --- 2. ข้อมูลเนื้อหา (ใส่ชื่อไฟล์รูปที่คุณอัปโหลดลง GitHub ตรง img:) ---
         const story = [
             {
                 emoji: "💖",
                 title: "Happy Anniversary!",
-                text: "สุขสันต์วันครบรอบและวันวาเลนไทน์นะ เว็บนี้ตั้งใจทำมาเซอร์ไพรส์คุณโดยเฉพาะเลย",
-                img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=60&w=500"
+                text: "สุขสันต์วันครบรอบและวันวาเลนไทน์นะ! เว็บนี้ตั้งใจทำมาให้คุณคนเดียวเลย",
+                img: "love1.jpg" // <-- ใส่ชื่อไฟล์รูปที่อัปโหลดลง GitHub เช่น love1.jpg หรือ pic1.png
             },
             {
-                emoji: "🌹",
-                title: "วันพิเศษของเรา",
-                text: "ดีใจมากที่มีคุณอยู่ในชีวิต ขอบคุณที่เป็นของขวัญที่ดีที่สุดเสมอมา",
-                img: "https://images.unsplash.com/photo-1516589174184-c68526671af8?auto=format&fit=crop&q=60&w=500"
+                emoji: "📸",
+                title: "ทุกความทรงจำ",
+                text: "ขอบคุณที่ยอมมาอยู่ในรูปถ่ายด้วยกัน ขอบคุณที่สร้างความทรงจำดีๆ ร่วมกันนะ",
+                img: "love2.jpg"
             },
             {
-                emoji: "🧸",
-                title: "สัญญาได้ไหม?",
-                text: "ว่าจะจับมือกันไปแบบนี้เรื่อยๆ ไม่ว่าจะวันครบรอบปีที่เท่าไหร่ ก็จะรักเหมือนเดิมนะ",
-                img: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&q=60&w=500"
+                emoji: "🏠",
+                title: "บ้านของความใจดี",
+                text: "ขอบคุณที่เป็นเซฟโซนให้กันเสมอมา ไม่ว่าจะเจออะไรมาก็ตาม",
+                img: "love3.jpg"
+            },
+            {
+                emoji: "♾️",
+                title: "รักคุณที่สุดเลย",
+                text: "สัญญานะว่าจะอยู่ด้วยกันแบบนี้ไปทุกๆ ปีเลย สุขสันต์วันวาเลนไทน์ครับ!",
+                img: "love4.jpg"
             }
         ];
 
@@ -124,10 +145,8 @@
         let isSurpriseActive = false;
         let secretClicks = 0;
 
-        // --- 2. ฟังก์ชันนับถอยหลัง ---
         function updateCountdown() {
             if (isSurpriseActive) return;
-
             const now = new Date().getTime();
             const diff = targetDate - now;
 
@@ -147,39 +166,54 @@
             document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
         }
 
-        // --- 3. ฟังก์ชันเปิดหน้าเซอร์ไพรส์ ---
         function activateSurprise() {
             if (isSurpriseActive) return;
             isSurpriseActive = true;
-            document.getElementById('countdown-section').style.display = 'none';
-            document.getElementById('surprise-section').style.display = 'block';
-            renderSlide();
-            createHearts();
+            const countdown = document.getElementById('countdown-section');
+            countdown.classList.add('animate__animated', 'animate__fadeOut');
+            setTimeout(() => {
+                countdown.style.display = 'none';
+                const surprise = document.getElementById('surprise-section');
+                surprise.style.display = 'block';
+                surprise.classList.add('animate__animated', 'animate__zoomIn');
+                renderSlide();
+                createHearts(15); 
+                setInterval(() => createHearts(1), 800);
+            }, 500);
         }
 
-        // --- 4. ฟังก์ชันจัดการสไลด์ ---
         function renderSlide() {
             const data = story[currentSlide];
             const content = document.getElementById('slide-content');
             
-            // ใช้ innerHTML ครั้งเดียวเพื่อเปลี่ยนเนื้อหา
             content.innerHTML = `
-                <div class="text-6xl mb-4 animate-bounce">${data.emoji}</div>
-                <h2 class="text-3xl text-pink-600 handwriting mb-4">${data.title}</h2>
-                <div class="rounded-2xl overflow-hidden shadow-inner mb-6 bg-gray-100 aspect-video flex items-center justify-center">
-                    <img src="${data.img}" class="w-full h-full object-cover" loading="lazy">
+                <div class="slide-enter">
+                    <div class="text-6xl mb-4 animate__animated animate__heartBeat animate__infinite animate__slow">${data.emoji}</div>
+                    <h2 class="text-4xl text-pink-600 handwriting mb-6">${data.title}</h2>
+                    <div class="rounded-[2rem] overflow-hidden shadow-lg mb-8 bg-pink-50 border-4 border-white aspect-[4/3]">
+                        <img src="${data.img}" class="w-full h-full object-cover shadow-inner" alt="memories" onerror="this.src='https://via.placeholder.com/600x450?text=No+Image+Found'">
+                    </div>
+                    <p class="text-gray-600 leading-relaxed text-lg italic font-light">"${data.text}"</p>
                 </div>
-                <p class="text-gray-700 leading-relaxed min-h-[80px]">${data.text}</p>
             `;
 
             document.getElementById('prevBtn').disabled = currentSlide === 0;
             document.getElementById('page-indicator').innerText = `${currentSlide + 1} / ${story.length}`;
-            document.getElementById('nextBtn').innerText = currentSlide === story.length - 1 ? 'เริ่มต้นใหม่ ❤️' : 'ถัดไป →';
+            
+            if (currentSlide === story.length - 1) {
+                document.getElementById('nextBtn').innerText = 'วนดูอีกรอบ ❤️';
+                document.getElementById('next-icon').style.display = 'none';
+            } else {
+                document.getElementById('nextBtn').innerText = 'หน้าถัดไป';
+                document.getElementById('next-icon').innerText = '→';
+                document.getElementById('next-icon').style.display = 'inline';
+            }
         }
 
         function nextSlide() {
             currentSlide = (currentSlide + 1) % story.length;
             renderSlide();
+            burstHearts();
         }
 
         function prevSlide() {
@@ -189,33 +223,40 @@
             }
         }
 
-        // --- 5. ระบบทดสอบ (Secret Trigger) ---
         function handleSecretClick() {
             secretClicks++;
             if (secretClicks >= 3) {
                 activateSurprise();
-                secretClicks = 0; // reset
+                secretClicks = 0;
             }
-            // รีเซ็ตจำนวนคลิกถ้าทิ้งช่วงนานเกิน 2 วินาที
             setTimeout(() => { secretClicks = 0; }, 2000);
         }
 
-        // --- 6. เอฟเฟกต์หัวใจ ---
-        function createHearts() {
-            const container = document.body;
-            setInterval(() => {
+        function createHearts(count) {
+            for(let i=0; i<count; i++) {
                 const heart = document.createElement('div');
                 heart.className = 'heart-particle';
-                heart.innerHTML = ['❤️', '💖', '💗', '💕'][Math.floor(Math.random() * 4)];
+                heart.innerHTML = ['❤️', '💖', '💗', '💕', '🌸'][Math.floor(Math.random() * 5)];
                 heart.style.left = Math.random() * 100 + 'vw';
-                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
-                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
-                container.appendChild(heart);
-                setTimeout(() => heart.remove(), 5000);
-            }, 500);
+                heart.style.animationDuration = (Math.random() * 3 + 3) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 15) + 'px';
+                document.body.appendChild(heart);
+                setTimeout(() => heart.remove(), 6000);
+            }
         }
 
-        // เริ่มต้นการทำงาน
+        function burstHearts() {
+            for(let i=0; i<8; i++) {
+                const h = document.createElement('div');
+                h.innerHTML = '❤️';
+                h.className = 'fixed pointer-events-none z-[60] animate__animated animate__fadeOutUp';
+                h.style.left = (window.innerWidth / 2 + (Math.random() * 200 - 100)) + 'px';
+                h.style.top = (window.innerHeight / 2) + 'px';
+                document.body.appendChild(h);
+                setTimeout(() => h.remove(), 1000);
+            }
+        }
+
         setInterval(updateCountdown, 1000);
         updateCountdown();
     </script>
