@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html lang="th">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Valentine & Anniversary Surprise</title>
+    <link href="https://fonts.googleapis.com/css2?family=Mitr:wght@300;500&family=Caveat:wght@700&display=swap" rel="stylesheet">
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: 'Mitr', sans-serif;
+            background-color: #fff5f5;
+            overflow-x: hidden;
+            touch-action: manipulation;
+        }
+        .handwriting { font-family: 'Caveat', cursive; }
+        .glass-card {
+            background: rgba(255, 255, 255, 0.9);
+            backdrop-filter: blur(10px);
+            border: 1px solid rgba(255, 182, 193, 0.5);
+            box-shadow: 0 8px 32px 0 rgba(255, 105, 180, 0.2);
+        }
+        .heart-particle {
+            position: fixed;
+            top: -10%;
+            user-select: none;
+            pointer-events: none;
+            z-index: 50;
+            animation: fall linear forwards;
+        }
+        @keyframes fall { to { transform: translateY(110vh) rotate(360deg); } }
+        .fade-in { animation: fadeIn 0.5s ease-in-out forwards; }
+        @keyframes fadeIn { from { opacity: 0; transform: scale(0.95); } to { opacity: 1; transform: scale(1); } }
+        
+        /* ซ่อนหน้าเซอร์ไพรส์เป็นค่าเริ่มต้น */
+        #surprise-section { display: none; }
+        .hidden-trigger {
+            position: fixed;
+            top: 0;
+            right: 0;
+            width: 50px;
+            height: 50px;
+            z-index: 100;
+            cursor: pointer;
+        }
+    </style>
+</head>
+<body class="flex items-center justify-center min-h-screen p-4">
+
+    <!-- จุดคลิกลับสำหรับทดสอบ (คลิก 3 ครั้งที่มุมขวาบน) -->
+    <div class="hidden-trigger" onclick="handleSecretClick()"></div>
+
+    <!-- ส่วนที่ 1: นับถอยหลัง (Countdown) -->
+    <div id="countdown-section" class="w-full max-w-md text-center">
+        <div class="glass-card p-8 rounded-3xl">
+            <h1 class="text-2xl mb-6 text-pink-600 font-medium">รอนับถอยหลังสู่วันพิเศษ</h1>
+            <div class="grid grid-cols-4 gap-2 mb-8 text-pink-700 font-bold">
+                <div class="bg-white p-3 rounded-xl shadow-sm">
+                    <span id="days">00</span><div class="text-[10px] font-light">วัน</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm">
+                    <span id="hours">00</span><div class="text-[10px] font-light">ชม.</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm">
+                    <span id="minutes">00</span><div class="text-[10px] font-light">นาที</div>
+                </div>
+                <div class="bg-white p-3 rounded-xl shadow-sm">
+                    <span id="seconds">00</span><div class="text-[10px] font-light">วินาที</div>
+                </div>
+            </div>
+            <p class="text-gray-400 italic text-sm">14 Feb, 05:50 AM</p>
+        </div>
+    </div>
+
+    <!-- ส่วนที่ 2: เนื้อหาเซอร์ไพรส์ (Story Slides) -->
+    <div id="surprise-section" class="w-full max-w-lg text-center relative z-10 fade-in">
+        <div class="glass-card p-6 md:p-10 rounded-3xl min-h-[500px] flex flex-col justify-between items-center">
+            
+            <div id="slide-content" class="w-full">
+                <!-- Content will be injected here -->
+            </div>
+
+            <div class="w-full mt-6">
+                <div class="flex justify-between items-center w-full">
+                    <button id="prevBtn" onclick="prevSlide()" class="text-pink-400 font-medium disabled:opacity-0">
+                        ← ย้อนกลับ
+                    </button>
+                    <div id="page-indicator" class="text-xs text-gray-400"></div>
+                    <button id="nextBtn" onclick="nextSlide()" class="bg-pink-500 text-white px-6 py-2 rounded-full shadow-md hover:bg-pink-600 transition-all">
+                        ถัดไป →
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script>
+        // --- 1. ตั้งค่าเวลาและข้อมูล ---
+        // ตั้งเวลาเป้าหมาย: 14 ก.พ. 2026 เวลา 05:50:00
+        const targetDate = new Date("Feb 14, 2026 05:50:00").getTime();
+        
+        const story = [
+            {
+                emoji: "💖",
+                title: "Happy Anniversary!",
+                text: "สุขสันต์วันครบรอบและวันวาเลนไทน์นะ เว็บนี้ตั้งใจทำมาเซอร์ไพรส์คุณโดยเฉพาะเลย",
+                img: "https://images.unsplash.com/photo-1518199266791-5375a83190b7?auto=format&fit=crop&q=60&w=500"
+            },
+            {
+                emoji: "🌹",
+                title: "วันพิเศษของเรา",
+                text: "ดีใจมากที่มีคุณอยู่ในชีวิต ขอบคุณที่เป็นของขวัญที่ดีที่สุดเสมอมา",
+                img: "https://images.unsplash.com/photo-1516589174184-c68526671af8?auto=format&fit=crop&q=60&w=500"
+            },
+            {
+                emoji: "🧸",
+                title: "สัญญาได้ไหม?",
+                text: "ว่าจะจับมือกันไปแบบนี้เรื่อยๆ ไม่ว่าจะวันครบรอบปีที่เท่าไหร่ ก็จะรักเหมือนเดิมนะ",
+                img: "https://images.unsplash.com/photo-1537633552985-df8429e8048b?auto=format&fit=crop&q=60&w=500"
+            }
+        ];
+
+        let currentSlide = 0;
+        let isSurpriseActive = false;
+        let secretClicks = 0;
+
+        // --- 2. ฟังก์ชันนับถอยหลัง ---
+        function updateCountdown() {
+            if (isSurpriseActive) return;
+
+            const now = new Date().getTime();
+            const diff = targetDate - now;
+
+            if (diff <= 0) {
+                activateSurprise();
+                return;
+            }
+
+            const d = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const h = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const m = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const s = Math.floor((diff % (1000 * 60)) / 1000);
+
+            document.getElementById('days').innerText = d.toString().padStart(2, '0');
+            document.getElementById('hours').innerText = h.toString().padStart(2, '0');
+            document.getElementById('minutes').innerText = m.toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = s.toString().padStart(2, '0');
+        }
+
+        // --- 3. ฟังก์ชันเปิดหน้าเซอร์ไพรส์ ---
+        function activateSurprise() {
+            if (isSurpriseActive) return;
+            isSurpriseActive = true;
+            document.getElementById('countdown-section').style.display = 'none';
+            document.getElementById('surprise-section').style.display = 'block';
+            renderSlide();
+            createHearts();
+        }
+
+        // --- 4. ฟังก์ชันจัดการสไลด์ ---
+        function renderSlide() {
+            const data = story[currentSlide];
+            const content = document.getElementById('slide-content');
+            
+            // ใช้ innerHTML ครั้งเดียวเพื่อเปลี่ยนเนื้อหา
+            content.innerHTML = `
+                <div class="text-6xl mb-4 animate-bounce">${data.emoji}</div>
+                <h2 class="text-3xl text-pink-600 handwriting mb-4">${data.title}</h2>
+                <div class="rounded-2xl overflow-hidden shadow-inner mb-6 bg-gray-100 aspect-video flex items-center justify-center">
+                    <img src="${data.img}" class="w-full h-full object-cover" loading="lazy">
+                </div>
+                <p class="text-gray-700 leading-relaxed min-h-[80px]">${data.text}</p>
+            `;
+
+            document.getElementById('prevBtn').disabled = currentSlide === 0;
+            document.getElementById('page-indicator').innerText = `${currentSlide + 1} / ${story.length}`;
+            document.getElementById('nextBtn').innerText = currentSlide === story.length - 1 ? 'เริ่มต้นใหม่ ❤️' : 'ถัดไป →';
+        }
+
+        function nextSlide() {
+            currentSlide = (currentSlide + 1) % story.length;
+            renderSlide();
+        }
+
+        function prevSlide() {
+            if (currentSlide > 0) {
+                currentSlide--;
+                renderSlide();
+            }
+        }
+
+        // --- 5. ระบบทดสอบ (Secret Trigger) ---
+        function handleSecretClick() {
+            secretClicks++;
+            if (secretClicks >= 3) {
+                activateSurprise();
+                secretClicks = 0; // reset
+            }
+            // รีเซ็ตจำนวนคลิกถ้าทิ้งช่วงนานเกิน 2 วินาที
+            setTimeout(() => { secretClicks = 0; }, 2000);
+        }
+
+        // --- 6. เอฟเฟกต์หัวใจ ---
+        function createHearts() {
+            const container = document.body;
+            setInterval(() => {
+                const heart = document.createElement('div');
+                heart.className = 'heart-particle';
+                heart.innerHTML = ['❤️', '💖', '💗', '💕'][Math.floor(Math.random() * 4)];
+                heart.style.left = Math.random() * 100 + 'vw';
+                heart.style.animationDuration = (Math.random() * 3 + 2) + 's';
+                heart.style.fontSize = (Math.random() * 20 + 10) + 'px';
+                container.appendChild(heart);
+                setTimeout(() => heart.remove(), 5000);
+            }, 500);
+        }
+
+        // เริ่มต้นการทำงาน
+        setInterval(updateCountdown, 1000);
+        updateCountdown();
+    </script>
+</body>
+</html>
+
