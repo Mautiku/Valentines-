@@ -37,7 +37,7 @@
         @keyframes slideInRight {
             from { transform: translateX(50px); opacity: 0; }
             to { transform: translateX(0); opacity: 1; }
-        }
+        } 
 
         #surprise-section { display: none; }
         
@@ -47,16 +47,14 @@
             z-index: 5;
         }
         
-        /* ปุ่มลับสำหรับ Test (ซ่อนสนิท) */
         .secret-trigger {
             position: fixed;
             width: 80px;
             height: 80px;
             z-index: 1000;
-            /* background: rgba(0,0,0,0.1); */ /* เปิดสีไว้ตอน Test ได้ครับ */
         }
         #trigger-tl { top: 0; left: 0; }
-        #trigger-tr { top: 0; right: 0; }
+        #trigger-tr { top: 0; right: 0; } 
 
         .floating-score {
             position: absolute;
@@ -69,7 +67,7 @@
         @keyframes floatUp {
             from { transform: translateY(0) scale(1); opacity: 1; }
             to { transform: translateY(-120px) scale(1.5); opacity: 0; }
-        }
+        } 
 
         .milestone-unlocked {
             animation: pulse-gold 2s infinite;
@@ -79,25 +77,53 @@
             0% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0.4); }
             70% { box-shadow: 0 0 0 20px rgba(255, 215, 0, 0); }
             100% { box-shadow: 0 0 0 0 rgba(255, 215, 0, 0); }
+        } 
+
+        .quiz-option {
+            transition: all 0.2s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            cursor: pointer;
+        }
+        .quiz-option:active { transform: scale(0.95); }
+        
+        #final-choice-container {
+            position: relative;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            justify-content: center;
+            width: 100%;
+            min-height: 300px;
+        } 
+
+        .timer-bar-container {
+            width: 100%;
+            height: 6px;
+            background: #ffe4e6;
+            border-radius: 10px;
+            overflow: hidden;
+            margin-bottom: 20px;
+        }
+        #timer-bar {
+            height: 100%;
+            background: linear-gradient(to right, #fb7185, #ec4899);
+            width: 100%;
+            transition: width 1s linear;
+        }
+        #noBtn {
+            transition: all 0.3s ease;
         }
     </style>
 </head>
-<body class="flex items-center justify-center min-h-screen p-4 overflow-hidden">
+<body class="flex items-center justify-center min-h-screen p-4 overflow-hidden"> 
 
-    <!-- จุดคลิกลับสำหรับ Test (ซ่อนอยู่มุมจอ) -->
-    <!-- วิธีใช้: กด ซ้ายบน -> ขวาบน -> ซ้ายบน -> ขวาบน เพื่อข้ามไปหน้าเซอร์ไพรส์ -->
     <div id="trigger-tl" class="secret-trigger" onclick="handleSecret('L')"></div>
-    <div id="trigger-tr" class="secret-trigger" onclick="handleSecret('R')"></div>
+    <div id="trigger-tr" class="secret-trigger" onclick="handleSecret('R')"></div> 
 
-    <!-- พื้นที่คลิกเก็บหัวใจ (Game Zone) -->
-    <div id="game-zone" class="click-zone" onclick="handleGameClick(event)"></div>
+    <div id="game-zone" class="click-zone" onclick="handleGameClick(event)"></div> 
 
-    <!-- ส่วนที่ 1: นับถอยหลัง -->
     <div id="countdown-section" class="w-full max-w-md text-center animate__animated animate__fadeIn relative z-10">
         <div id="countdown-card" class="glass-card p-8 rounded-[2.5rem] relative overflow-hidden transition-all duration-500">
-            
             <h1 id="main-title" class="text-2xl mb-6 text-pink-600 font-medium">รอวันที่เรานั้นรอคอย c:</h1>
-            
             <div class="grid grid-cols-4 gap-2 mb-8">
                 <div class="bg-white p-3 rounded-2xl border border-pink-100 shadow-sm">
                     <span id="days" class="text-2xl font-bold text-pink-600">00</span>
@@ -116,14 +142,10 @@
                     <div class="text-[10px] uppercase text-pink-400">วินาที</div>
                 </div>
             </div>
-
-            <!-- ข้อความแสดงผล -->
             <div class="bg-pink-50 rounded-xl p-4 mb-6 min-h-[100px] flex flex-col items-center justify-center border border-pink-100 transition-all duration-500">
                 <p id="daily-quote" class="text-pink-500 text-lg handwriting italic">"จิ้มหน้าจอเพื่อส่งความรักมาให้พี่จิ ❤️"</p>
                 <p id="unlocked-msg" class="text-pink-600 font-bold mt-2 hidden animate__animated animate__bounceIn">เก่งมั้กก! รับคำหนมๆจากพี่ไปเยย ✨</p>
             </div>
-
-            <!-- Progress Bar -->
             <div class="w-full bg-pink-100 h-3 rounded-full mb-2 overflow-hidden border border-pink-200">
                 <div id="love-progress" class="bg-gradient-to-r from-pink-400 to-pink-600 h-full transition-all duration-300" style="width: 0%"></div>
             </div>
@@ -131,16 +153,14 @@
                 <span>LOVE METER</span>
                 <span id="score-display">0 / 200</span>
             </div>
-            
             <p class="text-pink-300 italic text-xs font-light">See you on 14 Feb, 05:50 AM na ❤️</p>
         </div>
-    </div>
+    </div> 
 
-    <!-- ส่วนที่ 2: เซอร์ไพรส์หลัก -->
     <div id="surprise-section" class="w-full max-w-lg text-center relative z-20">
         <div class="glass-card p-8 md:p-12 rounded-[3rem] min-h-[550px] flex flex-col justify-between items-center relative overflow-hidden">
-            <div id="slide-content" class="w-full"></div>
-            <div class="w-full mt-8">
+            <div id="slide-content" class="w-full h-full flex items-center justify-center"></div>
+            <div id="controls" class="w-full mt-8">
                 <div class="flex justify-between items-center w-full">
                     <button id="prevBtn" onclick="prevSlide()" class="text-pink-400 font-medium disabled:opacity-0">← ย้อนกลับ</button>
                     <div id="page-indicator" class="px-3 py-1 bg-pink-100 text-pink-500 rounded-full text-xs font-bold"></div>
@@ -148,90 +168,87 @@
                 </div>
             </div>
         </div>
-    </div>
+    </div> 
 
     <script>
-        // --- CONFIG ---
         const targetDate = new Date("Feb 14, 2026 05:50:00").getTime();
+        
+        const quizzes = [
+            { question: "เราเจอกันครั้งแรกที่หนัยย", options: ["สยาม", "ค่าย", "โรงเรียน", "ร้านกาแฟ"], answer: 2 },
+            { question: "เมนูโปรดของพี่คือ?", options: ["กะเพราไข่ดาว", "กุ้งชุบแป้งทอด", "พิซซ่า", "ถูกทั้งข้อ"], answer: 3 },
+            { question: "มุ้อุ้ดเกิดเมื่อไหร่", options: ["21 กุมภาพันธ์", "3 มีนาคม", "22 กุมภาพันธ์", "21 มีนาคม"], answer: 2 },
+            { question: "มุ้หวานเกิดเมื่อไหร่", options: ["2 มีนาคม", "3 มีนาคม", "22 มีนาคม", "3 ตุลาคม"], answer: 1 },
+            { question: "วันเกิดเค้าเมื่อไหร่", options: ["14 กันยายน 2552", "14 สิงหาคม 2553", "14 สิงหาคม 2552", "14 กันยายน 2553"], answer: 2 },
+            { question: "เค้าชอบสีอารัย", options: ["ส้ม, เชียว", "ฟ้า, เขียว", "แดง, เขียว", "ขาว, เขียว"], answer: 3 },
+            { question: "หนูรักพี่มั้ยย?", type: "final_choice" }
+        ]; 
+
         const story = [
             { emoji: "💖", title: "Happy Anniversary!", text: "สุขสันต์วันครบรอบและวันวาเลนไทน์น้าาา^^", img: "love1.jpg" },
             { emoji: "📸", title: "ทุกความทรงจำ", text: "ขอบคุณที่ยอมมาอยู่ในรูปถ่ายด้วยกัน ขอบคุณที่สร้างความทรงจำดีๆ ร่วมกันนะ", img: "love2.gif" },
             { emoji: "🏠", title: "เซฟโซนของพี่", text: "ขอบคุณที่เป็นเซฟโซนให้กันเสมอมา ไม่ว่าจะเจออะไรมาก็ตาม", img: "love3.jpg" },
             { emoji: "🐶", title: "หมาน้อยของแมว", text: "ยูกหมาตัวนี้จะอยู่กับก้อลๆแมวๆไปนานๆเยย! จะมิยอมปล่อยไปจากมือเด็ดขาด!", img: "love4.jpg" },
             { emoji: "😺", title: "แมวน้อยของหมา!", text: "ยูกแมวตัวนี้ก็จะอยู่กับหมาๆไปนานๆเยยเหมือนกันใช่มั้ยย่าา! มิยอมให้ใครมาแตะต้อง", img: "love5.jpg" },
-            { emoji: "♾️", title: "รักหนูที่สุดเลย", text: "สัญญานะว่าจะอยู่ด้วยกันแบบนี้ไปทุกๆปีเยย สุขสันต์วันวาเลนไทน์และวันครบรอบน้าาา", img: "loved.jpeg" }
-        ];
+            { emoji: "♾️", title: "รักหนูที่สุดเลย", text: "สัญญานะว่าจะอยู่ด้วยกันแบบนี้ไปทุกๆปีเยย สุขสันต์วันวาเลนไทน์และวันครบรอบน้าาา", img: "loved.jpeg" },
+            { type: "quiz_start", emoji: "🧐", title: "Test Time!", text: "อ่านจบแล้ว มาทดสอบความจำกันหน่อยสิ๊!" }
+        ]; 
 
         const normalQuotes = [
-            "จิ้มหน้าจอเพื่อส่งความรักมาให้พี่จิ ❤️",
-            "มาเค้าท์ดาวน์กานนน",
-            "Ploy & Music",
-            "คิดถึงหนูจังเยยยยย",
-            "อีกนิดเดียวจะวันครบรอบแล้วนะ",
-            "รักหนูมากขึ้นทุกวันเลยรู้มั้ย",
-            "จิ้มรัวๆ ให้ครบ 200 ครั้งสิ มีรางวัลนะ",
-            "เจ้าแมวน่ายั้กของพี่~~"
-        ];
+            "จิ้มหน้าจอเพื่อส่งความรักมาให้พี่จิ ❤️", "มาเค้าท์ดาวน์กานนน", "Ploy & Music", "คิดถึงหนูจังเยยยยย",
+            "อีกนิดเดียวจะวันครบรอบแล้วนะ", "รักหนูมากขึ้นทุกวันเลยรู้มั้ย", "จิ้มรัวๆ ให้ครบ 200 ครั้งสิ มีรางวัลนะ", "เจ้าแมวน่ายั้กของพี่~~"
+        ]; 
 
         const rewards = [
-            "ทำไมแฟนพี่ถึงน่ารักขนาดนี้ง้ะะ 🥺",
-            "ภูมิใจในตัวหนูที่ฉุดเลยคนเก่ง ✨",
-            "คนอะไรไม่รู้ ยิ่งมองยิ่งตกหลุมยั้ก 💖",
-            "หนูคือของขวัญที่ดีที่สุดของพี่เยยนะ 🎁",
-            "ขอบคุณที่เกิดมาให้พี่ได้รักนะกั้บ 😘"
-        ];
+            "ทำไมแฟนพี่ถึงน่ารักขนาดนี้ง้ะะ 🥺", "ภูมิใจในตัวหนูที่ฉุดเลยคนเก่ง ✨", "คนอะไรไม่รู้ ยิ่งมองยิ่งตกหลุมยั้ก 💖",
+            "หนูคือของขวัญที่ดีที่สุดของพี่เยยนะ 🎁", "ขอบคุณที่เกิดมาให้พี่ได้รักนะกั้บ 😘"
+        ]; 
 
         let currentSlide = 0;
         let isSurpriseActive = false;
         let score = 0;
         let isMilestoneReached = false;
-
-        // --- SECRET LOGIC (FOR TESTING) ---
         let secretSequence = "";
-        const correctPattern = "LRLR"; // สูตรลับ: ซ้าย ขวา ซ้าย ขวา
+        const correctPattern = "LRLR";
         
+        let currentQuizIndex = 0;
+        let inQuizMode = false;
+        let loveBtnScale = 1; 
+
+        let quizTimer = null;
+        let timeLeft = 15;
+        let isChallengeMode = false; 
+
         function handleSecret(dir) {
             secretSequence += dir;
             if (secretSequence.includes(correctPattern)) {
                 activateSurprise();
                 secretSequence = "";
             }
-            // รีเซ็ตลำดับถ้าพิมพ์ผิดเกิน 4 ตัว
             if (secretSequence.length > 4) secretSequence = dir;
-        }
+        } 
 
-        // --- CORE LOGIC ---
         function updateCountdown() {
             if (isSurpriseActive) return;
             const now = new Date().getTime();
             const diff = targetDate - now;
-
-            if (diff <= 0) {
-                activateSurprise();
-                return;
-            }
+            if (diff <= 0) { activateSurprise(); return; } 
 
             document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
             document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
             document.getElementById('minutes').innerText = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60)).toString().padStart(2, '0');
-            document.getElementById('seconds').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0');
+            document.getElementById('seconds').innerText = Math.floor((diff % (1000 * 60)) / 1000).toString().padStart(2, '0'); 
 
             if (!isMilestoneReached && Math.floor(diff / 1000) % 8 === 0) {
                 updateQuote(normalQuotes[Math.floor(Math.random() * normalQuotes.length)]);
             }
-        }
+        } 
 
         function handleGameClick(e) {
-            if (isSurpriseActive) return;
-            
-            // ป้องกันการนับแต้มถ้าเผลอไปกดโดนขอบบน (ที่ซ่อนปุ่มลับไว้)
-            if (e.clientY < 80) return;
-
+            if (isSurpriseActive || e.clientY < 80) return;
             score++;
             const progress = Math.min((score / 200) * 100, 100);
             document.getElementById('love-progress').style.width = progress + '%';
             document.getElementById('score-display').innerText = `${score} / 200`;
-
             const floating = document.createElement('div');
             floating.className = 'floating-score';
             floating.innerText = isMilestoneReached ? '✨' : '❤️';
@@ -239,16 +256,13 @@
             floating.style.top = e.clientY + 'px';
             document.body.appendChild(floating);
             setTimeout(() => floating.remove(), 1000);
-
             createHearts(1, e.clientX);
-
-            if (score === 200 && !isMilestoneReached) {
-                reachMilestone();
-            } else if (isMilestoneReached && score % 20 === 0) {
+            if (score === 200 && !isMilestoneReached) reachMilestone();
+            else if (isMilestoneReached && score % 20 === 0) {
                 updateQuote(rewards[Math.floor(Math.random() * rewards.length)]);
                 celebrateMilestone(10);
             }
-        }
+        } 
 
         function reachMilestone() {
             isMilestoneReached = true;
@@ -257,17 +271,18 @@
             document.getElementById('main-title').innerText = "ปลดล็อกความยั้ก!! 🔓";
             updateQuote(rewards[Math.floor(Math.random() * rewards.length)]);
             celebrateMilestone(50);
-        }
+        } 
 
         function updateQuote(text) {
             const quoteElem = document.getElementById('daily-quote');
+            if(!quoteElem) return;
             quoteElem.classList.add('animate__animated', 'animate__fadeOutDown');
             setTimeout(() => {
                 quoteElem.innerText = `"${text}"`;
                 quoteElem.classList.remove('animate__fadeOutDown');
                 quoteElem.classList.add('animate__fadeInUp');
             }, 500);
-        }
+        } 
 
         function celebrateMilestone(count) {
             for(let i=0; i<count; i++) {
@@ -276,7 +291,7 @@
                     createHearts(1, x);
                 }, i * 100);
             }
-        }
+        } 
 
         function activateSurprise() {
             if (isSurpriseActive) return;
@@ -294,38 +309,241 @@
                 renderSlide();
                 setInterval(() => createHearts(1), 1200);
             }, 600);
-        }
+        } 
 
         function renderSlide() {
-            const data = story[currentSlide];
             const content = document.getElementById('slide-content');
-            content.innerHTML = `
-                <div class="slide-enter">
-                    <div class="text-6xl mb-4 animate__animated animate__heartBeat animate__infinite animate__slow">${data.emoji}</div>
-                    <h2 class="text-4xl text-pink-600 handwriting mb-4">${data.title}</h2>
-                    <div class="rounded-[2rem] overflow-hidden shadow-lg mb-6 bg-pink-50 border-4 border-white aspect-[4/3]">
-                        <img src="${data.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/600x450?text=Wait+for+Feb+14!+❤️'">
+            const controls = document.getElementById('controls');
+            
+            if (currentSlide < story.length) {
+                const data = story[currentSlide];
+                inQuizMode = false;
+                controls.style.display = 'flex';
+                
+                content.innerHTML = `
+                    <div class="slide-enter w-full">
+                        <div class="text-6xl mb-4 animate__animated animate__heartBeat animate__infinite animate__slow text-center">${data.emoji}</div>
+                        <h2 class="text-4xl text-pink-600 handwriting mb-4 text-center">${data.title}</h2>
+                        ${data.img ? `
+                        <div class="rounded-[2rem] overflow-hidden shadow-lg mb-6 bg-pink-50 border-4 border-white aspect-[4/3] mx-auto max-w-sm">
+                            <img src="${data.img}" class="w-full h-full object-cover" onerror="this.src='https://via.placeholder.com/600x450?text=Wait+for+Feb+14!+❤️'">
+                        </div>` : ''}
+                        <p class="text-gray-600 leading-relaxed text-lg italic font-light text-center">"${data.text}"</p>
                     </div>
-                    <p class="text-gray-600 leading-relaxed text-lg italic font-light">"${data.text}"</p>
+                `;
+                document.getElementById('prevBtn').disabled = currentSlide === 0;
+                document.getElementById('page-indicator').innerText = `${currentSlide + 1} / ${story.length}`;
+                document.getElementById('nextBtn').innerText = currentSlide === story.length - 1 ? 'เริ่มทำควิซกัน! 📝' : 'หน้าถัดไป →';
+            } else {
+                showQuizConfirmation();
+            }
+        } 
+
+        function showQuizConfirmation() {
+            const content = document.getElementById('slide-content');
+            document.getElementById('controls').style.display = 'none';
+            
+            content.innerHTML = `
+                <div class="animate__animated animate__fadeIn w-full text-center">
+                    <div class="text-6xl mb-6">🤔</div>
+                    <h3 class="text-2xl text-pink-700 font-bold mb-4">จำได้แม่นไหมคะ?</h3>
+                    <p class="text-gray-500 mb-10">ถ้ามั่นใจโหมดท้าทาย จะมีเวลาแค่ 15 วินาทีต่อข้อนะ!<br><span class="text-xs text-pink-400 font-bold">(ถ้าเวลาหมดต้องเริ่มใหม่หมดเลยนะ!)</span></p>
+                    <div class="flex flex-col gap-4 max-w-xs mx-auto">
+                        <button onclick="prepareQuiz(true)" class="bg-pink-500 text-white py-4 rounded-2xl shadow-lg font-bold hover:scale-105 transition-transform">
+                            มั่นใจมาก! (15 วิ) ⚡
+                        </button>
+                        <button onclick="prepareQuiz(false)" class="bg-gray-100 text-gray-500 py-4 rounded-2xl font-medium hover:bg-gray-200">
+                            ยังไม่ค่อยแน่ใจ (ไม่จำกัดเวลา)
+                        </button>
+                    </div>
                 </div>
             `;
-            document.getElementById('prevBtn').disabled = currentSlide === 0;
-            document.getElementById('page-indicator').innerText = `${currentSlide + 1} / ${story.length}`;
-            document.getElementById('nextBtn').innerText = currentSlide === story.length - 1 ? 'วนดูอีกรอบ ❤️' : 'หน้าถัดไป →';
-        }
+        } 
+
+        function prepareQuiz(isTimed) {
+            isChallengeMode = isTimed;
+            startQuiz();
+        } 
 
         function nextSlide() {
-            currentSlide = (currentSlide + 1) % story.length;
+            currentSlide++;
             renderSlide();
             burstHearts();
-        }
+        } 
 
         function prevSlide() {
             if (currentSlide > 0) {
                 currentSlide--;
                 renderSlide();
             }
-        }
+        } 
+
+        function startQuiz() {
+            inQuizMode = true;
+            currentQuizIndex = 0;
+            showQuizQuestion();
+        } 
+
+        function startTimer() {
+            clearInterval(quizTimer);
+            if (!isChallengeMode) return;
+            
+            timeLeft = 15;
+            const bar = document.getElementById('timer-bar');
+            bar.style.width = '100%';
+            
+            quizTimer = setInterval(() => {
+                timeLeft--;
+                const percentage = (timeLeft / 15) * 100;
+                bar.style.width = percentage + '%';
+                
+                if (timeLeft <= 0) {
+                    clearInterval(quizTimer);
+                    handleTimeOut();
+                }
+            }, 1000);
+        } 
+
+        function handleTimeOut() {
+            const content = document.getElementById('slide-content');
+            content.innerHTML = `
+                <div class="animate__animated animate__shakeX text-center">
+                    <div class="text-7xl mb-6">⏰</div>
+                    <h3 class="text-2xl text-red-500 font-bold mb-4">เวลาหมดแย้วว!</h3>
+                    <p class="text-gray-500 mb-8">พยายามใหม่นะคนเก่ง กลับไปเริ่มข้อแรกกัน!</p>
+                </div>
+            `;
+            setTimeout(startQuiz, 2000);
+        } 
+
+        function showQuizQuestion() {
+            const content = document.getElementById('slide-content');
+            const q = quizzes[currentQuizIndex];
+            
+            if (q.type === "final_choice") {
+                clearInterval(quizTimer);
+                loveBtnScale = 1;
+                content.innerHTML = `
+                    <div class="animate__animated animate__fadeInRight w-full flex flex-col items-center">
+                        <h3 class="text-3xl text-pink-700 font-bold mb-12 handwriting text-center">${q.question}</h3>
+                        <div id="final-choice-container">
+                            <button id="loveBtn" onclick="finalAnswer('รัก')" 
+                                    class="quiz-option bg-pink-500 text-white px-12 py-4 rounded-full shadow-xl font-bold text-xl z-20 mb-4 whitespace-nowrap">
+                                รักที่สุดด ❤️
+                            </button>
+                            <button id="noBtn" onclick="moveAndGrow()" 
+                                    class="quiz-option bg-gray-200 text-gray-500 px-8 py-2 rounded-full font-medium text-sm z-10">
+                                ไม่รัก...
+                            </button>
+                        </div>
+                    </div>
+                `;
+                return;
+            } 
+
+            content.innerHTML = `
+                <div class="animate__animated animate__fadeInRight w-full">
+                    ${isChallengeMode ? `
+                    <div class="timer-bar-container">
+                        <div id="timer-bar"></div>
+                    </div>
+                    ` : ''}
+                    <div class="bg-pink-100 text-pink-500 w-12 h-12 rounded-full flex items-center justify-center font-bold mx-auto mb-4">
+                        ${currentQuizIndex + 1}
+                    </div>
+                    <h3 class="text-xl text-pink-700 font-medium mb-8 text-center">${q.question}</h3>
+                    <div class="space-y-3 w-full max-w-xs mx-auto">
+                        ${q.options.map((opt, i) => `
+                            <button onclick="checkAnswer(${i})" class="quiz-option w-full py-4 px-6 bg-white border-2 border-pink-200 rounded-2xl text-pink-600 hover:bg-pink-50 hover:border-pink-400 font-medium">
+                                ${opt}
+                            </button>
+                        `).join('')}
+                    </div>
+                </div>
+            `;
+            if (isChallengeMode) startTimer();
+        } 
+
+        function checkAnswer(idx) {
+            const q = quizzes[currentQuizIndex];
+            const content = document.getElementById('slide-content');
+            
+            if (idx === q.answer) {
+                clearInterval(quizTimer);
+                burstHearts();
+                currentQuizIndex++;
+                content.innerHTML = `<div class="text-6xl animate__animated animate__bounceIn">✅</div>`;
+                setTimeout(showQuizQuestion, 800);
+            } else {
+                // ตอบผิดไม่ต้องเริ่มใหม่ แค่แสดงว่าผิดแล้วให้เลือกใหม่ (เวลานับต่อ)
+                const options = document.querySelectorAll('.quiz-option');
+                options[idx].classList.add('bg-red-50', 'border-red-300', 'text-red-400', 'animate__animated', 'animate__shakeX');
+                const originalText = q.options[idx];
+                options[idx].innerText = "ผิดเยย! ลองใหม่นะ 🥺";
+                setTimeout(() => {
+                    options[idx].classList.remove('bg-red-50', 'border-red-300', 'text-red-400', 'animate__shakeX');
+                    options[idx].innerText = originalText;
+                }, 1000);
+            }
+        } 
+
+        function moveAndGrow() {
+            const noBtn = document.getElementById('noBtn');
+            const loveBtn = document.getElementById('loveBtn');
+            const container = document.getElementById('final-choice-container');
+            
+            loveBtnScale += 0.8;
+            loveBtn.style.transform = `scale(${loveBtnScale})`;
+            
+            // สุ่มตำแหน่งใหม่ให้ปุ่ม "ไม่รัก"
+            const maxX = container.clientWidth - noBtn.clientWidth;
+            const maxY = container.clientHeight - noBtn.clientHeight;
+            
+            const randomX = Math.random() * maxX - (maxX/2);
+            const randomY = Math.random() * maxY - (maxY/2);
+            
+            noBtn.style.position = 'absolute';
+            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            
+            const funnyTexts = ["หืออ?", "กดผิดป่าวว", "แน่ใจนะะ", "พี่เสียใจนะ!", "รักพี่เถอะะ", "ไม่ให้กดด", "งื้ออออ"];
+            noBtn.innerText = funnyTexts[Math.floor(Math.random() * funnyTexts.length)]; 
+
+            // เมื่อปุ่มรักใหญ่มากจนบังทุกอย่าง
+            if(loveBtnScale > 8) {
+                noBtn.style.display = "none";
+                loveBtn.style.position = "fixed";
+                loveBtn.style.inset = "0";
+                loveBtn.style.width = "100vw";
+                loveBtn.style.height = "100vh";
+                loveBtn.style.zIndex = "100";
+                loveBtn.style.borderRadius = "0";
+                loveBtn.style.transform = "none";
+                loveBtn.innerText = "หนูต้องรักพี่ที่สุดคนเดียว! ❤️ (จิ้มเล้ยย)";
+            }
+            
+            burstHearts();
+        } 
+
+        function finalAnswer(choice) {
+            showFinalMessage();
+        } 
+
+        function showFinalMessage() {
+            const content = document.getElementById('slide-content');
+            content.innerHTML = `
+                <div class="animate__animated animate__heartBeat flex flex-col items-center">
+                    <div class="text-7xl mb-6">🏆</div>
+                    <h2 class="text-3xl text-pink-600 handwriting mb-4 text-center">เย่! รักกันไปนานๆ นะคะ</h2>
+                    <p class="text-gray-600 italic text-center px-4">ขอบคุณที่ร่วมสนุกและอยู่ด้วยกันนะคนเก่ง พี่รักหนูที่สุดเลยยย</p>
+                    <div class="mt-8 space-y-4">
+                        <button onclick="currentSlide=0; renderSlide();" class="bg-pink-500 text-white px-8 py-3 rounded-full shadow-lg font-medium block w-full">
+                            ดูความทรงจำอีกรอบ ❤️
+                        </button>
+                    </div>
+                </div>
+            `;
+            celebrateMilestone(40);
+        } 
 
         function createHearts(count, xPos = null) {
             for(let i=0; i<count; i++) {
@@ -338,7 +556,7 @@
                 document.body.appendChild(heart);
                 setTimeout(() => heart.remove(), 4000);
             }
-        }
+        } 
 
         function burstHearts() {
             for(let i=0; i<12; i++) {
@@ -351,7 +569,7 @@
                 document.body.appendChild(h);
                 setTimeout(() => h.remove(), 1000);
             }
-        }
+        } 
 
         setInterval(updateCountdown, 1000);
         updateCountdown();
