@@ -90,9 +90,10 @@
             display: flex;
             flex-direction: column;
             align-items: center;
-            justify-content: center;
+            justify-content: flex-start;
             width: 100%;
-            min-height: 300px;
+            height: 400px;
+            margin-top: 20px;
         } 
 
         .timer-bar-container {
@@ -110,7 +111,9 @@
             transition: width 1s linear;
         }
         #noBtn {
-            transition: all 0.3s ease;
+            transition: transform 0.35s cubic-bezier(0.175, 0.885, 0.32, 1.275);
+            position: relative;
+            z-index: 10;
         }
     </style>
 </head>
@@ -153,7 +156,7 @@
                 <span>LOVE METER</span>
                 <span id="score-display">0 / 200</span>
             </div>
-            <p class="text-pink-300 italic text-xs font-light">See you on 14 Feb, 05:50 AM na ❤️</p>
+            <p class="text-pink-300 italic text-xs font-light">See you on 14 Feb, 08:00 AM na ❤️</p>
         </div>
     </div> 
 
@@ -171,7 +174,8 @@
     </div> 
 
     <script>
-        const targetDate = new Date("Feb 14, 2026 05:50:00").getTime();
+        // Target: Feb 14, 2026 08:00
+        const targetDate = new Date("Feb 14, 2026 08:00:00").getTime();
         
         const quizzes = [
             { question: "เราเจอกันครั้งแรกที่หนัยย", options: ["สยาม", "ค่าย", "โรงเรียน", "ร้านกาแฟ"], answer: 2 },
@@ -229,9 +233,22 @@
 
         function updateCountdown() {
             if (isSurpriseActive) return;
-            const now = new Date().getTime();
-            const diff = targetDate - now;
-            if (diff <= 0) { activateSurprise(); return; } 
+            const now = new Date();
+            const nowTime = now.getTime();
+            const diff = targetDate - nowTime;
+            
+            const isValentineDay = (now.getMonth() === 1 && now.getDate() === 14);
+            const mainTitle = document.getElementById('main-title');
+            
+            if (isValentineDay && diff > 0) {
+                mainTitle.innerText = "14 ก.พ. แย้ว รอแฟนตื่นเค้าท์ดาวน์พร้อมกัน ❤️";
+                mainTitle.classList.add('text-pink-500');
+            } else if (diff <= 0) {
+                activateSurprise(); 
+                return; 
+            } else {
+                mainTitle.innerText = "รอวันที่เรานั้นรอคอย c:";
+            }
 
             document.getElementById('days').innerText = Math.floor(diff / (1000 * 60 * 60 * 24)).toString().padStart(2, '0');
             document.getElementById('hours').innerText = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60)).toString().padStart(2, '0');
@@ -333,7 +350,7 @@
                 `;
                 document.getElementById('prevBtn').disabled = currentSlide === 0;
                 document.getElementById('page-indicator').innerText = `${currentSlide + 1} / ${story.length}`;
-                document.getElementById('nextBtn').innerText = currentSlide === story.length - 1 ? 'เริ่มทำควิซกัน! 📝' : 'หน้าถัดไป →';
+                document.getElementById('nextBtn').innerText = currentSlide === story.length - 1 ? 'เริ่มตอบคำถามกัล! 📝' : 'หน้าถัดไป →';
             } else {
                 showQuizConfirmation();
             }
@@ -347,10 +364,10 @@
                 <div class="animate__animated animate__fadeIn w-full text-center">
                     <div class="text-6xl mb-6">🤔</div>
                     <h3 class="text-2xl text-pink-700 font-bold mb-4">จำได้แม่นไหมคะ?</h3>
-                    <p class="text-gray-500 mb-10">ถ้ามั่นใจโหมดท้าทาย จะมีเวลาแค่ 15 วินาทีต่อข้อนะ!<br><span class="text-xs text-pink-400 font-bold">(ถ้าเวลาหมดต้องเริ่มใหม่หมดเลยนะ!)</span></p>
+                    <p class="text-gray-500 mb-10">ถ้ามั่นใจโหมดท้าทาย จะมีเวลาแค่ 15 วินาทีต่อข้อน้าา<br><span class="text-xs text-pink-400 font-bold">(ถ้าเวยาหมดต้องเริ่มใหม่หมดเลยนะ)</span></p>
                     <div class="flex flex-col gap-4 max-w-xs mx-auto">
                         <button onclick="prepareQuiz(true)" class="bg-pink-500 text-white py-4 rounded-2xl shadow-lg font-bold hover:scale-105 transition-transform">
-                            มั่นใจมาก! (15 วิ) ⚡
+                            มั่นใจมาก (15 วิ) ⚡
                         </button>
                         <button onclick="prepareQuiz(false)" class="bg-gray-100 text-gray-500 py-4 rounded-2xl font-medium hover:bg-gray-200">
                             ยังไม่ค่อยแน่ใจ (ไม่จำกัดเวลา)
@@ -410,7 +427,7 @@
                 <div class="animate__animated animate__shakeX text-center">
                     <div class="text-7xl mb-6">⏰</div>
                     <h3 class="text-2xl text-red-500 font-bold mb-4">เวลาหมดแย้วว!</h3>
-                    <p class="text-gray-500 mb-8">พยายามใหม่นะคนเก่ง กลับไปเริ่มข้อแรกกัน!</p>
+                    <p class="text-gray-500 mb-8">พยายามใหม่นะคนเก่ง กลับไปเริ่มข้อแรกกาน</p>
                 </div>
             `;
             setTimeout(startQuiz, 2000);
@@ -425,14 +442,14 @@
                 loveBtnScale = 1;
                 content.innerHTML = `
                     <div class="animate__animated animate__fadeInRight w-full flex flex-col items-center">
-                        <h3 class="text-3xl text-pink-700 font-bold mb-12 handwriting text-center">${q.question}</h3>
+                        <h3 class="text-3xl text-pink-700 font-bold mb-8 handwriting text-center">${q.question}</h3>
                         <div id="final-choice-container">
                             <button id="loveBtn" onclick="finalAnswer('รัก')" 
-                                    class="quiz-option bg-pink-500 text-white px-12 py-4 rounded-full shadow-xl font-bold text-xl z-20 mb-4 whitespace-nowrap">
+                                    class="quiz-option bg-pink-500 text-white px-12 py-4 rounded-full shadow-xl font-bold text-xl z-20 whitespace-nowrap">
                                 รักที่สุดด ❤️
                             </button>
-                            <button id="noBtn" onclick="moveAndGrow()" 
-                                    class="quiz-option bg-gray-200 text-gray-500 px-8 py-2 rounded-full font-medium text-sm z-10">
+                            <button id="noBtn" onmouseover="moveAndGrow()" onclick="moveAndGrow()" 
+                                    class="quiz-option bg-gray-200 text-gray-500 px-8 py-2 rounded-full font-medium text-sm mt-32">
                                 ไม่รัก...
                             </button>
                         </div>
@@ -475,7 +492,6 @@
                 content.innerHTML = `<div class="text-6xl animate__animated animate__bounceIn">✅</div>`;
                 setTimeout(showQuizQuestion, 800);
             } else {
-                // ตอบผิดไม่ต้องเริ่มใหม่ แค่แสดงว่าผิดแล้วให้เลือกใหม่ (เวลานับต่อ)
                 const options = document.querySelectorAll('.quiz-option');
                 options[idx].classList.add('bg-red-50', 'border-red-300', 'text-red-400', 'animate__animated', 'animate__shakeX');
                 const originalText = q.options[idx];
@@ -492,33 +508,74 @@
             const loveBtn = document.getElementById('loveBtn');
             const container = document.getElementById('final-choice-container');
             
-            loveBtnScale += 0.8;
+            // ขยายปุ่มรักให้ช้าลงเพื่อพื้นที่วิ่งเล่น
+            loveBtnScale += 0.45;
             loveBtn.style.transform = `scale(${loveBtnScale})`;
             
-            // สุ่มตำแหน่งใหม่ให้ปุ่ม "ไม่รัก"
-            const maxX = container.clientWidth - noBtn.clientWidth;
-            const maxY = container.clientHeight - noBtn.clientHeight;
+            // คำนวณรัศมีที่ปุ่มรักบังอยู่
+            const loveRadius = (loveBtn.offsetWidth * loveBtnScale) / 2;
+            const containerRect = container.getBoundingClientRect();
             
-            const randomX = Math.random() * maxX - (maxX/2);
-            const randomY = Math.random() * maxY - (maxY/2);
-            
+            // สุ่มตำแหน่งใหม่ โดยต้องอยู่นอกเขตปุ่มรักและไม่เกินขอบจอ
+            // พยายามผลักปุ่มหนีออกจากจุดศูนย์กลาง
+            let newX = 0;
+            let newY = 0;
+            let validPosition = false;
+            let attempts = 0;
+
+            while (!validPosition && attempts < 50) {
+                // สุ่มองศาที่จะดีดออก
+                const angle = Math.random() * Math.PI * 2;
+                // สุ่มระยะห่างที่ไกลกว่าปุ่มรัก
+                const dist = loveRadius + 80 + (Math.random() * 50);
+                
+                newX = Math.cos(angle) * dist;
+                newY = Math.sin(angle) * dist;
+
+                // ตรวจสอบว่าตำแหน่งใหม่อยู่ในขอบจอไหม
+                const absX = containerRect.left + containerRect.width/2 + newX;
+                const absY = containerRect.top + 40 + newY; // 40 คือตำแหน่งคร่าวๆ ของปุ่มรัก
+
+                if (absX > 50 && absX < window.innerWidth - 50 && absY > 100 && absY < window.innerHeight - 100) {
+                    validPosition = true;
+                }
+                attempts++;
+            }
+
+            // ถ้าหาที่ไปไม่ได้จริงๆ (โดนปุ่มรักบังเกือบมิด) ให้สุ่มแถวๆ ขอบ
+            if (!validPosition) {
+                newX = (Math.random() > 0.5 ? 1 : -1) * (window.innerWidth/3);
+                newY = (Math.random() > 0.5 ? 1 : -1) * (window.innerHeight/3);
+            }
+
             noBtn.style.position = 'absolute';
-            noBtn.style.transform = `translate(${randomX}px, ${randomY}px)`;
+            noBtn.style.marginTop = '0'; // ล้าง margin ตั้งต้น
+            noBtn.style.left = '50%';
+            noBtn.style.top = '40px'; // อิงจากปุ่มรัก
+            noBtn.style.transform = `translate(calc(-50% + ${newX}px), ${newY}px)`;
             
-            const funnyTexts = ["หืออ?", "กดผิดป่าวว", "แน่ใจนะะ", "พี่เสียใจนะ!", "รักพี่เถอะะ", "ไม่ให้กดด", "งื้ออออ"];
+            const funnyTexts = ["หืออ?", "กดผิดป่าวว", "แน่ใจนะะ", "พี่เสียใจนะ!", "รักพี่เถอะะ", "ไม่ให้กดด", "งื้ออออ", "อย่าน้าา", "จะกดจริงหยอ", "ตั๊บหน้าเยย!"];
             noBtn.innerText = funnyTexts[Math.floor(Math.random() * funnyTexts.length)]; 
 
-            // เมื่อปุ่มรักใหญ่มากจนบังทุกอย่าง
-            if(loveBtnScale > 8) {
+            // เมื่อปุ่มรักใหญ่มากจนบังทุกอย่าง (End game state)
+            if(loveBtnScale > 6.5) {
                 noBtn.style.display = "none";
                 loveBtn.style.position = "fixed";
                 loveBtn.style.inset = "0";
                 loveBtn.style.width = "100vw";
                 loveBtn.style.height = "100vh";
-                loveBtn.style.zIndex = "100";
+                loveBtn.style.zIndex = "1000";
                 loveBtn.style.borderRadius = "0";
                 loveBtn.style.transform = "none";
-                loveBtn.innerText = "หนูต้องรักพี่ที่สุดคนเดียว! ❤️ (จิ้มเล้ยย)";
+                loveBtn.classList.remove('rounded-full');
+                loveBtn.innerHTML = `
+                    <div class="flex flex-col items-center justify-center h-full space-y-8 animate__animated animate__zoomIn">
+                        <span class="text-4xl md:text-6xl px-4">หนูต้องรักพี่ที่สุดคนเดียว! ❤️</span>
+                        <div class="bg-white text-pink-500 px-12 py-6 rounded-full text-3xl font-black shadow-2xl pulse">
+                             จิ้มเบาๆ สิคะ 
+                        </div>
+                    </div>
+                `;
             }
             
             burstHearts();
@@ -530,13 +587,17 @@
 
         function showFinalMessage() {
             const content = document.getElementById('slide-content');
+            // เคลียร์ปุ่มรักกรณีมันคลุมหน้าจอ
+            const loveBtn = document.getElementById('loveBtn');
+            if(loveBtn) loveBtn.style.display = 'none';
+
             content.innerHTML = `
-                <div class="animate__animated animate__heartBeat flex flex-col items-center">
+                <div class="animate__animated animate__heartBeat flex flex-col items-center z-[2000] relative">
                     <div class="text-7xl mb-6">🏆</div>
                     <h2 class="text-3xl text-pink-600 handwriting mb-4 text-center">เย่! รักกันไปนานๆ นะคะ</h2>
-                    <p class="text-gray-600 italic text-center px-4">ขอบคุณที่ร่วมสนุกและอยู่ด้วยกันนะคนเก่ง พี่รักหนูที่สุดเลยยย</p>
+                    <p class="text-gray-600 italic text-center px-4">ขอบคุณที่อยู่ด้วยกันมาตลอดนะคนเก่ง พี่รักหนูที่สุดเลยยย</p>
                     <div class="mt-8 space-y-4">
-                        <button onclick="currentSlide=0; renderSlide();" class="bg-pink-500 text-white px-8 py-3 rounded-full shadow-lg font-medium block w-full">
+                        <button onclick="window.location.reload()" class="bg-pink-500 text-white px-8 py-3 rounded-full shadow-lg font-medium block w-full">
                             ดูความทรงจำอีกรอบ ❤️
                         </button>
                     </div>
